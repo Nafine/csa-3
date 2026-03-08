@@ -1,3 +1,3 @@
 Reports:
-- [acc32 report](https://wrench.edu.swampbuds.me/report/7c810770-db23-4e88-9982-820cd664baf1)
-- [f32a report](https://wrench.edu.swampbuds.me/report/0537c999-b3dd-4df6-ab26-6fc2fa91919a)
+- [acc32 report](https://wrench.edu.swampbuds.me/report/ca7b6b15-4ddf-45bc-be09-5ea3f201599b)
+- [f32a report](https://wrench.edu.swampbuds.me/report/6cde467b-fa78-439a-8dc6-c3a9b625b037)
