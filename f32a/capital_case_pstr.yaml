@@ -8,8 +8,9 @@ reports:
   - name: Step-by-step
     slice: all
     view: |
-      T A S {T:hex} {A:hex} {S:hex} R {R}
+      T A B S {T:hex} {A:hex} {B:hex} {S:hex} R {R}
       {pc}: {instruction} {pc:label}
+      {memory:0:31}
   - name: Result
     slice: last
     view: |
