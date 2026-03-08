@@ -1,7 +1,7 @@
     .data
 
-buf:             .byte  32, '________________________________'
-capitalized_str: .byte  32, '________________________________'
+buf:             .byte  31, '_______________________________'
+capitalized_str: .byte  31, '_______________________________'
 
 const_newline:   .word  0x0a
 const_space:     .word  0x20
@@ -23,45 +23,49 @@ _start:
 read_line:
     lit buf lit 1 + b!       \ b for buf address
     lit 1                    \ shift:[]
-    lit 32
+    lit 31                   \ buffer_remaining:shift:[]
 read_line_while:
-    dup                      \ input_size:input_size:shift:[]
-    if error                 \ input_size:shift:[]
+    dup                      \ buffer_remaining:buffer_remaining:shift:[]
+    if error                 \ buffer_remaining:shift:[]
 
-    @ lit 255 and            \ cur_sym:input_size:shift:[]
+    @ lit 255 and            \ cur_sym:buffer_remaining:shift:[]
 
-    dup                      \ cur_sym:cur_sym:input_size:shift:[]
+    dup                      \ cur_sym:cur_sym:buffer_remaining:shift:[]
     @p const_newline xor     \ check whether symbol is newline character
     if read_line_finish      \ finish reading if symbol was newline character
 
-    !b                       \ input_size:shift:[]
+    write_first_byte
 
-    lit -1 +                 \ input_size - 1:shift:[]
+    lit -1 +                 \ buffer_remaining - 1:shift:[]
 
-    over lit 1 +             \ shift + 1:input_size - 1:[]
+    over lit 1 +             \ shift + 1:buffer_remaining - 1:[]
 
-    dup                      \ shift + 1:shift + 1:input_size:[]
-    lit buf + b!             \ move pointer, shift:input_size:[]
+    dup                      \ shift + 1:shift + 1:buffer_remaining:[]
+    lit buf + b!             \ move pointer, shift:buffer_remaining:[]
 
-    over                     \ input_size:shift[]
+    over                     \ buffer_remaining:shift[]
 
     read_line_while ;
 read_line_finish:
-    drop                     \ input_size:shift:[]
+    drop                     \ buffer_remaining:shift:[]
     drop                     \ shift:[]
 
     lit -1 +                 \ shift - 1:[]
 
-    lit buf a!
-
-    rewrite_size
-    ;
-
-rewrite_size:
     lit buf b!
 
-    @ lit 0xffffff00         \ mask:first_byte:size:[]
-    and                      \ masked_byte:size:[]
+    write_first_byte
+
+    lit buf a!
+    ;
+
+\ since current arch is little-endian, i.e., mem[0x00]=0x0f, mem[0x01]=0x0e, mem[0x02]=0x0d, mem[0x03]=0x0c 
+\ will become 0x0c0d0e0f on read from address 0x00
+
+write_first_byte:
+    lit 0xffffff00 @b                       \ b_value:mask:input:[]
+
+    and                      \ masked_value:input:[]
     xor !b                   \ rewrite first byte
     ;
 
