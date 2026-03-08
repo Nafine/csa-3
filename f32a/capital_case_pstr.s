@@ -1,14 +1,15 @@
     .data
 
 buf:             .byte  32, '________________________________'
-actual_buf_size: .word  0
-max_size_dec:    .word  -33
+capitalized_str: .byte  32, '________________________________'
+
 const_newline:   .word  0x0a
+const_space:     .word  0x20
+
 input_addr:      .word  0x80
 output_addr:     .word  0x84
 
     .text
-
     .org 0x100
 _start:
     @p input_addr a!         \ a for input
@@ -22,7 +23,7 @@ _start:
 read_line:
     lit buf lit 1 + b!       \ b for buf address
     lit 1                    \ shift:[]
-    @ lit 255 and            \ input_size:shift:[]
+    lit 32
 read_line_while:
     dup                      \ input_size:input_size:shift:[]
     if error                 \ input_size:shift:[]
