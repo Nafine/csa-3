@@ -5,7 +5,6 @@ output_addr:     .word  0x84
 const_1:         .word  0x01
 n:               .word  0
 result:          .word  0
-inv:             .word  0
 counter:         .word  32
 
     .text
@@ -14,8 +13,6 @@ _start:
     load         input_addr
     load_acc
     store        n
-    and          const_1
-    store        inv
     jmp          inverse
 
 inverse:
