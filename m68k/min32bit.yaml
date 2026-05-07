@@ -1,0 +1,21 @@
+name: "assert format_string('Min 32-bit: %d\n-2147483648\n') == ('Min 32-bit: -2147483648', '')"
+limit: 2000
+memory_size: 0x1000
+memory_mapped_io:
+  0x80: [77, 105, 110, 32, 51, 50, 45, 98, 105, 116, 58, 32, 37, 100, 10, 45, 50, 49, 52, 55, 52, 56, 51, 54, 52, 56, 10]
+  0x84: []
+reports:
+  - name: Check results
+    slice: last
+    filter:
+      - state
+    view: |
+      numio[0x80]: {io:0x80:dec}
+      numio[0x84]: {io:0x84:dec}
+      symio[0x80]: {io:0x80:sym}
+      symio[0x84]: {io:0x84:sym}
+    assert: |
+      numio[0x80]: [] >>> []
+      numio[0x84]: [] >>> [77,105,110,32,51,50,45,98,105,116,58,32,45,50,49,52,55,52,56,51,54,52,56]
+      symio[0x80]: "" >>> ""
+      symio[0x84]: "" >>> "Min 32-bit: -2147483648"
